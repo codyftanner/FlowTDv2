@@ -1,0 +1,289 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// Authentication & Users
+// ==========================================
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  accounts      Account[]
+  sessions      Session[]
+  
+  // User-specific settings
+  captureEmail  String?   @unique // Unique email for capture forwarding
+  
+  // Relationships
+  goals         Goal[]
+  projects      Project[]
+  tasks         Task[]
+  timeBlocks    TimeBlock[]
+  incubatorItems IncubatorItem[]
+  calendarConnections CalendarConnection[]
+  weeklyReviews WeeklyReview[]
+  inboxItems    InboxItem[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ==========================================
+// Goals System (4 Horizons)
+// ==========================================
+
+model Goal {
+  id            String    @id @default(cuid())
+  userId        String
+  horizon       String  // PURPOSE | THREE_TO_FIVE_YEAR | ONE_TO_TWO_YEAR | QUARTERLY
+  title         String
+  description   String?
+  successCriteria String?
+  targetDate    DateTime?
+  isCompleted   Boolean   @default(false)
+  completedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projects      Project[]
+}
+
+// ==========================================
+// Projects & Next Actions
+// ==========================================
+
+model Project {
+  id            String    @id @default(cuid())
+  userId        String
+  goalId        String?   // Linked to a goal
+  title         String
+  desiredOutcome String
+  status        String  @default("ACTIVE")  // ACTIVE | ON_HOLD | COMPLETED
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  completedAt   DateTime?
+  
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goal          Goal?     @relation(fields: [goalId], references: [id])
+  tasks         Task[]
+  nextActions   Task[]    @relation("ProjectNextActions")
+}
+
+// ==========================================
+// Tasks & Inbox Items
+// ==========================================
+
+model InboxItem {
+  id              String    @id @default(cuid())
+  userId          String
+  title           String
+  notes           String?
+  source          String   @default("MANUAL")  // MANUAL | EMAIL | SHARE_SHEET
+  capturedAt      DateTime  @default(now())
+  processedAt     DateTime?
+  
+  // Email-specific fields
+  emailSender     String?
+  emailSubject    String?
+  emailBody       String?
+  
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Task {
+  id            String      @id @default(cuid())
+  userId        String
+  projectId     String?     // Optional project linkage
+  nextActionProjectId String? // For tracking which project this is a Next Action for
+  title         String
+  notes         String?
+  
+  // Task organization
+  status        String  @default("PENDING")  // PENDING | IN_PROGRESS | COMPLETED | DEFERRED
+  
+  // Time management
+  dueDate       DateTime?
+  plannedStart  DateTime?   // For time blocking
+  plannedEnd    DateTime?
+  
+  // Tags and metadata
+  energyLevel   String?  // HIGH | LOW
+  timeBlock     String?  // QUICK_WIN | FOCUSED | DEEP_WORK
+  contexts      String?     // Comma-separated contexts like "#office,#calls"
+  contacts      String?     // Comma-separated like "@john,@sarah"
+  
+  // Tracking
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  completedAt   DateTime?
+  
+  // Relationships
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project       Project?    @relation(fields: [projectId], references: [id])
+  nextActionProject Project? @relation("ProjectNextActions", fields: [nextActionProjectId], references: [id])
+  
+  // Flags
+  isNextAction  Boolean     @default(false) // Is this a "Next Action" for a project?
+  isWaiting     Boolean     @default(false) // Waiting on someone/something
+  waitingOn     String?     // Who/what are we waiting on
+  isRecurring   Boolean     @default(false)
+  
+  timeBlocks    TimeBlock[]
+}
+
+// ==========================================
+// Calendar Integration & Time Blocking
+// ==========================================
+
+model CalendarConnection {
+  id              String    @id @default(cuid())
+  userId          String
+  provider        String    @default("google") // Only Google in MVP
+  accessToken     String
+  refreshToken    String?
+  expiresAt       DateTime?
+  calendarId      String    // Google calendar ID
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  timeBlocks      TimeBlock[]
+}
+
+model TimeBlock {
+  id              String    @id @default(cuid())
+  userId          String
+  taskId          String?
+  calendarConnId  String?
+  
+  // Time block details
+  title           String
+  startTime       DateTime
+  endTime         DateTime
+  
+  // Google Calendar sync
+  googleEventId   String?   @unique
+  lastSyncedAt    DateTime?
+  
+  // Metadata
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  task            Task?     @relation(fields: [taskId], references: [id])
+  calendarConn    CalendarConnection? @relation(fields: [calendarConnId], references: [id])
+}
+
+// ==========================================
+// The Incubator (Future Ideas)
+// ==========================================
+
+model IncubatorItem {
+  id              String    @id @default(cuid())
+  userId          String
+  title           String
+  notes           String?
+  
+  // Rich content
+  imageUrl        String?
+  links           String? // JSON array of URLs
+  
+  // Promotion tracking
+  promotedAt      DateTime?
+  promotedToId    String?   // Task or Project ID after promotion
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ==========================================
+// Weekly Review System
+// ==========================================
+
+model WeeklyReview {
+  id              String    @id @default(cuid())
+  userId          String
+  startedAt       DateTime  @default(now())
+  completedAt     DateTime?
+  durationMinutes Int?
+  
+  // Stages completed
+  collectedItems  Boolean   @default(false)
+  processedInbox  Boolean   @default(false)
+  reviewedProjects Boolean  @default(false)
+  alignedGoals    Boolean   @default(false)
+  reviewedIncubator Boolean @default(false)
+  plannedCalendar Boolean   @default(false)
+  
+  // Metrics
+  itemsProcessed  Int       @default(0)
+  projectsAligned Int       @default(0)
+  
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ==========================================
+// Analytics & Success Metrics
+// ==========================================
+
+model AnalyticsEvent {
+  id              String    @id @default(cuid())
+  userId          String
+  eventType       String    // e.g., "capture_submitted", "inbox_processed", "review_completed"
+  metadata        String? // JSON metadata
+  createdAt       DateTime  @default(now())
+  
+  // For calculating metrics like capture speed, inbox age, etc.
+  captureTimeMs   Int?      // For US-001 capture speed
+}
