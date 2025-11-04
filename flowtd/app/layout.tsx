@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="antialiased bg-white">
+      <body className="antialiased glass-bg min-h-screen">
         <Providers>
           {children}
         </Providers>

@@ -189,30 +189,32 @@ export default function TodayView() {
   const visibleSections = sections.filter(s => s.items.length > 0 || s.id === 'calendar')
 
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Today</h1>
-        <p className="text-gray-600 mt-1">
+    <div className="max-w-5xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold text-gray-900 mb-2 drop-shadow-lg">Today</h1>
+        <p className="text-gray-700 text-lg font-medium">
           {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
         </p>
       </div>
 
-      <ContextFilter
-        selectedContexts={selectedContexts}
-        onContextsChange={setSelectedContexts}
-        selectedEnergy={selectedEnergy}
-        onEnergyChange={setSelectedEnergy}
-        selectedTimeBlock={selectedTimeBlock}
-        onTimeBlockChange={setSelectedTimeBlock}
-      />
+      <div className="mb-6">
+        <ContextFilter
+          selectedContexts={selectedContexts}
+          onContextsChange={setSelectedContexts}
+          selectedEnergy={selectedEnergy}
+          onEnergyChange={setSelectedEnergy}
+          selectedTimeBlock={selectedTimeBlock}
+          onTimeBlockChange={setSelectedTimeBlock}
+        />
+      </div>
 
       {visibleSections.length === 0 ? (
-        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
-          <div className="text-gray-400 mb-4">
+        <div className="glass-card rounded-2xl p-12 text-center shadow-xl">
+          <div className="text-gray-500 mb-4">
             <CheckCircle2 className="w-16 h-16 mx-auto" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Nothing scheduled for today</h3>
-          <p className="text-gray-600">
+          <p className="text-gray-700">
             Your day is clear! Check your projects or inbox for things to work on.
           </p>
         </div>
@@ -226,16 +228,16 @@ export default function TodayView() {
             )
 
             return (
-              <div key={section.id} className="bg-white rounded-lg border border-gray-200">
+              <div key={section.id} className="glass-card rounded-2xl shadow-xl overflow-hidden">
                 <button
                   onClick={() => toggleSection(section.id)}
-                  className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+                  className="w-full flex items-center justify-between p-5 hover:bg-white/20 transition-all"
                 >
                   <div className="flex items-center gap-3">
                     <Icon className={`w-5 h-5 ${
                       isOverdue ? 'text-red-600' : 
                       section.id === 'calendar' ? 'text-blue-600' : 
-                      'text-gray-600'
+                      'text-gray-700'
                     }`} />
                     <h2 className={`text-lg font-semibold ${
                       isOverdue ? 'text-red-600' : 'text-gray-900'
@@ -243,34 +245,34 @@ export default function TodayView() {
                       {section.title}
                     </h2>
                     {section.items.length > 0 && (
-                      <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                      <span className="text-sm text-gray-700 glass-button px-3 py-1 rounded-full">
                         {section.items.length}
                       </span>
                     )}
                   </div>
                   {isCollapsed ? (
-                    <ChevronDown className="w-5 h-5 text-gray-400" />
+                    <ChevronDown className="w-5 h-5 text-gray-500" />
                   ) : (
-                    <ChevronUp className="w-5 h-5 text-gray-400" />
+                    <ChevronUp className="w-5 h-5 text-gray-500" />
                   )}
                 </button>
 
                 {!isCollapsed && (
-                  <div className="px-4 pb-4">
+                  <div className="px-5 pb-5">
                     {section.items.length === 0 ? (
-                      <p className="text-gray-500 text-sm py-4">{section.emptyMessage}</p>
+                      <p className="text-gray-600 text-sm py-4">{section.emptyMessage}</p>
                     ) : (
-                      <div className="space-y-2">
+                      <div className="space-y-3">
                         {section.items.map((task) => {
                           const isTaskOverdue = task.dueDate && new Date(task.dueDate) < new Date(new Date().setHours(0, 0, 0, 0))
                           
                           return (
                             <div
                               key={task.id}
-                              className={`p-3 rounded-lg border ${
+                              className={`glass rounded-xl p-4 border ${
                                 isTaskOverdue 
-                                  ? 'border-red-200 bg-red-50' 
-                                  : 'border-gray-200 bg-gray-50'
+                                  ? 'border-red-300/50 bg-red-50/50' 
+                                  : 'border-white/30 bg-white/40'
                               }`}
                             >
                               <div className="flex items-start justify-between">
@@ -278,39 +280,39 @@ export default function TodayView() {
                                   <div className="flex items-center gap-2 mb-1">
                                     <h3 className="font-medium text-gray-900">{task.title}</h3>
                                     {isTaskOverdue && (
-                                      <span className="text-xs text-red-600 bg-red-100 px-2 py-0.5 rounded">
+                                      <span className="text-xs text-red-700 glass-button px-2 py-0.5 rounded-full bg-red-100/50">
                                         Overdue
                                       </span>
                                     )}
                                   </div>
                                   {task.notes && (
-                                    <p className="text-sm text-gray-600 mb-2">{task.notes}</p>
+                                    <p className="text-sm text-gray-700 mb-2">{task.notes}</p>
                                   )}
                                   <div className="flex flex-wrap gap-2">
                                     {task.project && (
-                                      <div className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                                      <div className="text-xs text-blue-700 glass-button px-2 py-1 rounded-full bg-blue-100/50">
                                         {task.project.title}
                                       </div>
                                     )}
                                     {task.contexts && task.contexts.split(',').map((ctx, idx) => (
-                                      <span key={idx} className="text-xs text-purple-600 bg-purple-50 px-2 py-1 rounded">
+                                      <span key={idx} className="text-xs text-purple-700 glass-button px-2 py-1 rounded-full bg-purple-100/50">
                                         {ctx.trim()}
                                       </span>
                                     ))}
                                     {task.energyLevel && (
-                                      <span className="text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded">
+                                      <span className="text-xs text-orange-700 glass-button px-2 py-1 rounded-full bg-orange-100/50">
                                         {task.energyLevel === 'HIGH' ? '⚡ High Energy' : '🪫 Low Energy'}
                                       </span>
                                     )}
                                     {task.timeBlock && (
-                                      <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded">
+                                      <span className="text-xs text-green-700 glass-button px-2 py-1 rounded-full bg-green-100/50">
                                         {task.timeBlock === 'QUICK_WIN' ? '<15m' : 
                                          task.timeBlock === 'FOCUSED' ? '15-60m' : 
                                          '>1h'}
                                       </span>
                                     )}
                                     {task.waitingOn && (
-                                      <div className="text-xs text-yellow-600 bg-yellow-50 px-2 py-1 rounded">
+                                      <div className="text-xs text-yellow-700 glass-button px-2 py-1 rounded-full bg-yellow-100/50">
                                         Waiting on: {task.waitingOn}
                                       </div>
                                     )}

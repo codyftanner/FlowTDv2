@@ -32,14 +32,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname()
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Mobile sidebar */}
       <div className={`fixed inset-0 z-50 lg:hidden ${sidebarOpen ? '' : 'hidden'}`}>
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)} />
-        <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-white">
-          <div className="flex h-16 items-center justify-between px-4 border-b">
+        <div className="fixed inset-0 glass-overlay" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-y-0 left-0 flex w-64 flex-col glass-nav shadow-2xl">
+          <div className="flex h-16 items-center justify-between px-4 border-b border-white/20">
             <h1 className="text-xl font-bold text-gray-900">FlowTD</h1>
-            <button onClick={() => setSidebarOpen(false)}>
+            <button 
+              onClick={() => setSidebarOpen(false)}
+              className="p-2 rounded-lg glass-button text-gray-700 hover:text-gray-900"
+            >
               <X className="h-6 w-6" />
             </button>
           </div>
@@ -50,10 +53,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg ${
+                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all ${
                     isActive
-                      ? 'bg-blue-50 text-blue-700'
-                      : 'text-gray-700 hover:bg-gray-50'
+                      ? 'glass-active text-blue-700'
+                      : 'text-gray-700 hover:glass-button'
                   }`}
                   onClick={() => setSidebarOpen(false)}
                 >
@@ -68,8 +71,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* Desktop sidebar */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex flex-col flex-grow border-r border-gray-200 bg-white">
-          <div className="flex h-16 items-center px-4 border-b">
+        <div className="flex flex-col flex-grow glass-nav shadow-2xl border-r border-white/20">
+          <div className="flex h-16 items-center px-4 border-b border-white/20">
             <h1 className="text-xl font-bold text-gray-900">FlowTD</h1>
           </div>
           <nav className="flex-1 space-y-1 px-2 py-4">
@@ -79,10 +82,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg ${
+                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all ${
                     isActive
-                      ? 'bg-blue-50 text-blue-700'
-                      : 'text-gray-700 hover:bg-gray-50'
+                      ? 'glass-active text-blue-700'
+                      : 'text-gray-700 hover:glass-button'
                   }`}
                 >
                   <item.icon className="mr-3 h-5 w-5" />
@@ -97,11 +100,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Main content */}
       <div className="lg:pl-64 flex flex-col min-h-screen">
         {/* Top bar with capture */}
-        <div className="sticky top-0 z-10 bg-white border-b border-gray-200">
+        <div className="sticky top-0 z-10 glass-nav border-b border-white/20 shadow-lg">
           <div className="flex h-16 items-center px-4">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-600"
+              className="lg:hidden p-2 rounded-lg glass-button text-gray-700 hover:text-gray-900"
             >
               <Menu className="h-6 w-6" />
             </button>
@@ -112,7 +115,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
 
         {/* Page content */}
-        <main className="flex-1">
+        <main className="flex-1 p-6">
           {children}
         </main>
       </div>
