@@ -40,6 +40,7 @@ Thumbs.db
 # Environment variables
 .env
 .env.local
+.env*.local
 
 # Logs
 *.log
@@ -49,4 +50,23 @@ Thumbs.db
 
 # pyenv
 .python-version
+
+# Next.js
+flowtd/.next/
+flowtd/out/
+flowtd/next-env.d.ts
+flowtd/.vercel
+flowtd/*.tsbuildinfo
+
+# Node.js
+flowtd/node_modules/
+flowtd/npm-debug.log*
+flowtd/yarn-debug.log*
+flowtd/yarn-error.log*
+
+# Prisma / Database
+flowtd/prisma/*.db
+flowtd/prisma/*.db-journal
+flowtd/*.db
+flowtd/*.db-journal
 
