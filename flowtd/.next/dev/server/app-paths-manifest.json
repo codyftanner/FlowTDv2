@@ -1,1 +1,16 @@
-{}
+{
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/api/goals/route": "app/api/goals/route.js",
+  "/api/inbox/capture/route": "app/api/inbox/capture/route.js",
+  "/api/inbox/route": "app/api/inbox/route.js",
+  "/api/projects/route": "app/api/projects/route.js",
+  "/api/tasks/today/route": "app/api/tasks/today/route.js",
+  "/dashboard/focus/page": "app/dashboard/focus/page.js",
+  "/dashboard/goals/page": "app/dashboard/goals/page.js",
+  "/dashboard/inbox/page": "app/dashboard/inbox/page.js",
+  "/dashboard/incubator/page": "app/dashboard/incubator/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/dashboard/projects/page": "app/dashboard/projects/page.js",
+  "/dashboard/review/page": "app/dashboard/review/page.js",
+  "/page": "app/page.js"
+}

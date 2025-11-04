@@ -34,14 +34,21 @@ export default function InboxProcessor() {
   }, [])
 
   const loadInboxItems = async () => {
+    setLoading(true)
     try {
       const response = await fetch('/api/inbox')
       if (response.ok) {
         const data = await response.json()
         setItems(data)
+      } else {
+        console.error('Failed to load inbox items:', response.status, response.statusText)
+        // Set empty array on error to prevent stuck loading state
+        setItems([])
       }
     } catch (error) {
       console.error('Failed to load inbox items:', error)
+      // Set empty array on error to prevent stuck loading state
+      setItems([])
     } finally {
       setLoading(false)
     }

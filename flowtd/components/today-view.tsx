@@ -43,6 +43,7 @@ export default function TodayView() {
   }, [selectedContexts, selectedEnergy, selectedTimeBlock])
 
   const loadTodayTasks = async () => {
+    setLoading(true)
     try {
       // Build query params
       const params = new URLSearchParams()
@@ -61,9 +62,15 @@ export default function TodayView() {
       if (res.ok) {
         const data = await res.json()
         setTasks(data)
+      } else {
+        console.error('Failed to load today tasks:', res.status, res.statusText)
+        // Set empty array on error to prevent stuck loading state
+        setTasks([])
       }
     } catch (error) {
       console.error('Failed to load today tasks:', error)
+      // Set empty array on error to prevent stuck loading state
+      setTasks([])
     } finally {
       setLoading(false)
     }
