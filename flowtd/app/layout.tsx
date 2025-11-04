@@ -20,7 +20,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="antialiased bg-white">
+      <body className="antialiased bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 min-h-screen">
+        <div className="fixed inset-0 bg-gradient-to-br from-blue-100/50 via-purple-100/30 to-pink-100/50 pointer-events-none" />
         <Providers>
           {children}
         </Providers>

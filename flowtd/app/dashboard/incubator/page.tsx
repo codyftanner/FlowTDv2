@@ -12,9 +12,7 @@ export default async function IncubatorPage() {
   
   return (
     <DashboardLayout>
-      <div className="p-6">
-        <IncubatorList />
-      </div>
+      <IncubatorList />
     </DashboardLayout>
   )
 }

@@ -31,10 +31,10 @@ export default function CaptureInput() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-2">
+    <form onSubmit={handleSubmit} className="flex items-center gap-2 glass-input rounded-2xl px-4 py-2">
       <button
         type="button"
-        className="p-2 text-gray-400 hover:text-gray-600"
+        className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
       >
         <Plus className="h-5 w-5" />
       </button>
@@ -43,10 +43,10 @@ export default function CaptureInput() {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="What needs to be done?"
-        className="flex-1 text-sm py-2 px-3 border-0 focus:outline-none focus:ring-0"
+        className="flex-1 text-sm py-2 px-3 bg-transparent border-0 focus:outline-none focus:ring-0 placeholder-gray-400 text-gray-700"
         disabled={isSubmitting}
       />
-      <div className="text-xs text-gray-400 px-2">
+      <div className="text-xs text-gray-400 px-2 hidden sm:block">
         Press Enter to capture
       </div>
     </form>

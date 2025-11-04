@@ -12,9 +12,7 @@ export default async function GoalsPage() {
   
   return (
     <DashboardLayout>
-      <div className="p-6">
-        <GoalsList />
-      </div>
+      <GoalsList />
     </DashboardLayout>
   )
 }

@@ -98,11 +98,9 @@ export default function InboxProcessor() {
 
   if (loading) {
     return (
-      <div className="p-6">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-64"></div>
-          <div className="h-20 bg-gray-200 rounded"></div>
-        </div>
+      <div className="animate-pulse space-y-4">
+        <div className="h-8 glass-card rounded-xl w-64"></div>
+        <div className="h-20 glass-card rounded-xl"></div>
       </div>
     )
   }
@@ -112,14 +110,14 @@ export default function InboxProcessor() {
 
   if (!currentItem) {
     return (
-      <div className="p-6">
-        <div className="max-w-2xl mx-auto text-center">
+      <div className="max-w-2xl mx-auto text-center">
+        <div className="glass-card rounded-2xl p-8">
           <CheckCircle2 className="h-16 w-16 text-green-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Inbox Zero! 🎉</h2>
           <p className="text-gray-600 mb-6">All items processed</p>
           <button
             onClick={() => router.push('/dashboard')}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg"
+            className="glass-button text-white font-semibold py-3 px-8 rounded-xl transition-all hover:scale-105"
           >
             Go to Dashboard
           </button>
@@ -129,28 +127,27 @@ export default function InboxProcessor() {
   }
 
   return (
-    <div className="p-6">
-      <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto">
         {/* Progress */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
-            <h1 className="text-2xl font-bold text-gray-900">Process Inbox</h1>
-            <span className="text-sm font-medium text-gray-600">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Process Inbox</h1>
+            <span className="text-sm font-medium text-gray-600 glass-card px-3 py-1 rounded-full">
               {remainingCount} remaining
             </span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full glass-card rounded-full h-3 p-1">
             <div
-              className="bg-blue-600 h-2 rounded-full transition-all"
+              className="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full transition-all backdrop-blur-sm"
               style={{ width: `${((items.length - remainingCount) / items.length) * 100}%` }}
             />
           </div>
         </div>
 
         {/* Current Item */}
-        <div className="bg-white rounded-lg border-2 border-blue-500 shadow-lg p-6 mb-6">
-          <div className="mb-4">
-            <h2 className="text-xl font-semibold text-gray-900">{currentItem.title}</h2>
+        <div className="glass-card rounded-2xl border-2 border-blue-400/40 p-8 mb-6">
+          <div className="mb-6">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-2">{currentItem.title}</h2>
             {currentItem.notes && (
               <p className="text-gray-600 mt-2">{currentItem.notes}</p>
             )}
@@ -161,7 +158,7 @@ export default function InboxProcessor() {
             <button
               onClick={() => handleAction('do')}
               disabled={processing}
-              className="flex items-center justify-center gap-2 bg-green-50 hover:bg-green-100 text-green-700 font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
+              className="flex items-center justify-center gap-2 bg-green-500/20 hover:bg-green-500/30 backdrop-blur-sm border border-green-300/30 text-green-700 font-medium py-3 px-4 rounded-xl transition-all disabled:opacity-50"
             >
               <CheckCircle2 className="h-5 w-5" />
               Do It Now
@@ -171,7 +168,7 @@ export default function InboxProcessor() {
             <button
               onClick={() => handleAction('next')}
               disabled={processing}
-              className="flex items-center justify-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
+              className="flex items-center justify-center gap-2 bg-blue-500/20 hover:bg-blue-500/30 backdrop-blur-sm border border-blue-300/30 text-blue-700 font-medium py-3 px-4 rounded-xl transition-all disabled:opacity-50"
             >
               <ExternalLink className="h-5 w-5" />
               Next Action
@@ -181,7 +178,7 @@ export default function InboxProcessor() {
             <button
               onClick={() => handleAction('later')}
               disabled={processing}
-              className="flex items-center justify-center gap-2 bg-yellow-50 hover:bg-yellow-100 text-yellow-700 font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
+              className="flex items-center justify-center gap-2 bg-yellow-500/20 hover:bg-yellow-500/30 backdrop-blur-sm border border-yellow-300/30 text-yellow-700 font-medium py-3 px-4 rounded-xl transition-all disabled:opacity-50"
             >
               <Clock className="h-5 w-5" />
               Later
@@ -191,7 +188,7 @@ export default function InboxProcessor() {
             <button
               onClick={() => handleAction('waiting')}
               disabled={processing}
-              className="flex items-center justify-center gap-2 bg-orange-50 hover:bg-orange-100 text-orange-700 font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
+              className="flex items-center justify-center gap-2 bg-orange-500/20 hover:bg-orange-500/30 backdrop-blur-sm border border-orange-300/30 text-orange-700 font-medium py-3 px-4 rounded-xl transition-all disabled:opacity-50"
             >
               <AlertCircle className="h-5 w-5" />
               Waiting
@@ -201,7 +198,7 @@ export default function InboxProcessor() {
             <button
               onClick={() => handleAction('project')}
               disabled={processing}
-              className="flex items-center justify-center gap-2 bg-purple-50 hover:bg-purple-100 text-purple-700 font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
+              className="flex items-center justify-center gap-2 bg-purple-500/20 hover:bg-purple-500/30 backdrop-blur-sm border border-purple-300/30 text-purple-700 font-medium py-3 px-4 rounded-xl transition-all disabled:opacity-50"
             >
               <Plus className="h-5 w-5" />
               Project
@@ -211,7 +208,7 @@ export default function InboxProcessor() {
             <button
               onClick={() => handleAction('delete')}
               disabled={processing}
-              className="flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-700 font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
+              className="flex items-center justify-center gap-2 bg-red-500/20 hover:bg-red-500/30 backdrop-blur-sm border border-red-300/30 text-red-700 font-medium py-3 px-4 rounded-xl transition-all disabled:opacity-50"
             >
               <Trash2 className="h-5 w-5" />
               Delete
@@ -221,14 +218,13 @@ export default function InboxProcessor() {
         </div>
 
         {/* Instructions */}
-        <div className="bg-gray-50 rounded-lg p-4">
+        <div className="glass-card rounded-xl p-4">
           <p className="text-sm text-gray-600">
             Use keyboard shortcuts or click buttons to process each item. 
             Each action fully handles the item—no revisiting needed.
           </p>
         </div>
       </div>
-    </div>
   )
 }
 

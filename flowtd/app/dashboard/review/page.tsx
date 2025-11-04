@@ -12,9 +12,7 @@ export default async function ReviewPage() {
   
   return (
     <DashboardLayout>
-      <div className="p-6">
-        <WeeklyReviewWizard />
-      </div>
+      <WeeklyReviewWizard />
     </DashboardLayout>
   )
 }

@@ -180,7 +180,9 @@ export default function TodayView() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="text-gray-500">Loading today's tasks...</div>
+        <div className="glass-card rounded-2xl p-6">
+          <div className="text-gray-600">Loading today's tasks...</div>
+        </div>
       </div>
     )
   }
@@ -190,24 +192,26 @@ export default function TodayView() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Today</h1>
-        <p className="text-gray-600 mt-1">
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-2">Today</h1>
+        <p className="text-gray-600 text-lg">
           {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
         </p>
       </div>
 
-      <ContextFilter
-        selectedContexts={selectedContexts}
-        onContextsChange={setSelectedContexts}
-        selectedEnergy={selectedEnergy}
-        onEnergyChange={setSelectedEnergy}
-        selectedTimeBlock={selectedTimeBlock}
-        onTimeBlockChange={setSelectedTimeBlock}
-      />
+      <div className="mb-6">
+        <ContextFilter
+          selectedContexts={selectedContexts}
+          onContextsChange={setSelectedContexts}
+          selectedEnergy={selectedEnergy}
+          onEnergyChange={setSelectedEnergy}
+          selectedTimeBlock={selectedTimeBlock}
+          onTimeBlockChange={setSelectedTimeBlock}
+        />
+      </div>
 
       {visibleSections.length === 0 ? (
-        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+        <div className="glass-card rounded-2xl p-12 text-center">
           <div className="text-gray-400 mb-4">
             <CheckCircle2 className="w-16 h-16 mx-auto" />
           </div>
@@ -226,15 +230,15 @@ export default function TodayView() {
             )
 
             return (
-              <div key={section.id} className="bg-white rounded-lg border border-gray-200">
+              <div key={section.id} className="glass-card rounded-2xl overflow-hidden">
                 <button
                   onClick={() => toggleSection(section.id)}
-                  className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+                  className="w-full flex items-center justify-between p-5 hover:bg-white/30 transition-all"
                 >
                   <div className="flex items-center gap-3">
                     <Icon className={`w-5 h-5 ${
-                      isOverdue ? 'text-red-600' : 
-                      section.id === 'calendar' ? 'text-blue-600' : 
+                      isOverdue ? 'text-red-500' : 
+                      section.id === 'calendar' ? 'text-blue-500' : 
                       'text-gray-600'
                     }`} />
                     <h2 className={`text-lg font-semibold ${
@@ -243,7 +247,7 @@ export default function TodayView() {
                       {section.title}
                     </h2>
                     {section.items.length > 0 && (
-                      <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                      <span className="text-sm text-gray-600 bg-white/60 backdrop-blur-sm px-3 py-1 rounded-full border border-white/40">
                         {section.items.length}
                       </span>
                     )}
@@ -256,21 +260,21 @@ export default function TodayView() {
                 </button>
 
                 {!isCollapsed && (
-                  <div className="px-4 pb-4">
+                  <div className="px-5 pb-5">
                     {section.items.length === 0 ? (
                       <p className="text-gray-500 text-sm py-4">{section.emptyMessage}</p>
                     ) : (
-                      <div className="space-y-2">
+                      <div className="space-y-3">
                         {section.items.map((task) => {
                           const isTaskOverdue = task.dueDate && new Date(task.dueDate) < new Date(new Date().setHours(0, 0, 0, 0))
                           
                           return (
                             <div
                               key={task.id}
-                              className={`p-3 rounded-lg border ${
+                              className={`p-4 rounded-xl backdrop-blur-sm border ${
                                 isTaskOverdue 
-                                  ? 'border-red-200 bg-red-50' 
-                                  : 'border-gray-200 bg-gray-50'
+                                  ? 'border-red-200/50 bg-red-50/60' 
+                                  : 'border-white/40 bg-white/40'
                               }`}
                             >
                               <div className="flex items-start justify-between">
@@ -278,7 +282,7 @@ export default function TodayView() {
                                   <div className="flex items-center gap-2 mb-1">
                                     <h3 className="font-medium text-gray-900">{task.title}</h3>
                                     {isTaskOverdue && (
-                                      <span className="text-xs text-red-600 bg-red-100 px-2 py-0.5 rounded">
+                                      <span className="text-xs text-red-600 bg-red-100/80 backdrop-blur-sm px-2 py-1 rounded-full border border-red-200/30">
                                         Overdue
                                       </span>
                                     )}
@@ -288,29 +292,29 @@ export default function TodayView() {
                                   )}
                                   <div className="flex flex-wrap gap-2">
                                     {task.project && (
-                                      <div className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                                      <div className="text-xs text-blue-600 bg-blue-50/80 backdrop-blur-sm px-2 py-1 rounded-full border border-blue-200/30">
                                         {task.project.title}
                                       </div>
                                     )}
                                     {task.contexts && task.contexts.split(',').map((ctx, idx) => (
-                                      <span key={idx} className="text-xs text-purple-600 bg-purple-50 px-2 py-1 rounded">
+                                      <span key={idx} className="text-xs text-purple-600 bg-purple-50/80 backdrop-blur-sm px-2 py-1 rounded-full border border-purple-200/30">
                                         {ctx.trim()}
                                       </span>
                                     ))}
                                     {task.energyLevel && (
-                                      <span className="text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded">
+                                      <span className="text-xs text-orange-600 bg-orange-50/80 backdrop-blur-sm px-2 py-1 rounded-full border border-orange-200/30">
                                         {task.energyLevel === 'HIGH' ? '⚡ High Energy' : '🪫 Low Energy'}
                                       </span>
                                     )}
                                     {task.timeBlock && (
-                                      <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded">
+                                      <span className="text-xs text-green-600 bg-green-50/80 backdrop-blur-sm px-2 py-1 rounded-full border border-green-200/30">
                                         {task.timeBlock === 'QUICK_WIN' ? '<15m' : 
                                          task.timeBlock === 'FOCUSED' ? '15-60m' : 
                                          '>1h'}
                                       </span>
                                     )}
                                     {task.waitingOn && (
-                                      <div className="text-xs text-yellow-600 bg-yellow-50 px-2 py-1 rounded">
+                                      <div className="text-xs text-yellow-600 bg-yellow-50/80 backdrop-blur-sm px-2 py-1 rounded-full border border-yellow-200/30">
                                         Waiting on: {task.waitingOn}
                                       </div>
                                     )}

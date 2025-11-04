@@ -12,9 +12,7 @@ export default async function FocusPage() {
   
   return (
     <DashboardLayout>
-      <div className="p-6">
-        <FocusMode />
-      </div>
+      <FocusMode />
     </DashboardLayout>
   )
 }
